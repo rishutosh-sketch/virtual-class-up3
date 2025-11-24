@@ -203,9 +203,9 @@ function setupCourseButtons() {
 var API_BASE = (function(){
   var v = localStorage.getItem('vc_api_base') || '';
   if (v) return v.replace(/\/+$/,'');
-  var origin = window.location.origin;
-  var isDevStatic = origin.indexOf('127.0.0.1:5500') !== -1 || origin.indexOf('localhost:5500') !== -1;
-  if (isDevStatic) return 'http://localhost:3000';
+  var host = window.location.hostname || '';
+  var port = window.location.port || '';
+  if ((host === '127.0.0.1' || host === 'localhost') && port !== '3000') return 'http://localhost:3000';
   return '';
 })();
 

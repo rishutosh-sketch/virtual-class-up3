@@ -22,6 +22,17 @@ if (process.env.CORS_ORIGIN) {
     if (req.method === 'OPTIONS') return res.sendStatus(200);
     next();
   });
+} else {
+  app.use((req, res, next) => {
+    const o = String(req.headers.origin || '');
+    if (/^http:\/\/(localhost|127\.0\.0\.1):\d+$/.test(o)) {
+      res.header('Access-Control-Allow-Origin', o);
+      res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+      res.header('Access-Control-Allow-Methods', 'GET,POST,PATCH,DELETE,OPTIONS');
+      if (req.method === 'OPTIONS') return res.sendStatus(200);
+    }
+    next();
+  });
 }
 
 db.serialize(() => {
