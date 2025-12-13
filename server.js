@@ -1,6 +1,13 @@
 const express = require('express');
 const path = require('path');
-const sqlite3 = require('sqlite3').verbose();
+
+const usePg = !!process.env.DATABASE_URL || !!process.env.PGHOST;
+
+let sqlite3 = null;
+if (!usePg) {
+  sqlite3 = require('sqlite3').verbose();
+}
+
 const { Pool } = require('pg');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
@@ -9,7 +16,6 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const JWT_SECRET = process.env.JWT_SECRET || 'dev_secret_change_me';
 const dbPath = process.env.DB_FILE || path.join(__dirname, 'db.sqlite');
-const usePg = !!process.env.DATABASE_URL || !!process.env.PGHOST;
 let pool = null;
 let db = null;
 function q(sql){ let i=0; return String(sql).replace(/\?/g,()=>'$'+(++i)); }
