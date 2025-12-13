@@ -274,7 +274,7 @@ if (usePg) {
     db.get('SELECT COUNT(*) as c FROM courses', (err, row) => {
       const seed = !row || row.c === 0;
       if (seed) {
-        const stmt = db.prepare('INSERT INTO courses (id,title,instructor,category,level,duration,description,image_url) VALUES (?,?,?,?,?,?,?,?)');
+        const stmt = db.prepare('INSERT INTO courses (title,instructor,category,level,duration,description,image_url) VALUES (?,?,?,?,?,?,?,?)');
         const seedCourses = [
           [1, 'Web Development Mastery', 'John Smith', 'Web Dev', 'Beginner', '12h', 'Build modern responsive websites using HTML, CSS, and JS.', 'https://upload.wikimedia.org/wikipedia/commons/6/61/HTML5_logo_and_wordmark.svg'],
           [2, 'JavaScript Superpowers', 'Sarah Johnson', 'Programming', 'Intermediate', '10h', 'Master ES6+, async patterns, and practical DOM workflows.', 'https://share.google/images/Q4dZtlgWHmiK8w6Of'],
