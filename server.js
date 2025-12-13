@@ -197,19 +197,83 @@ if (usePg) {
 
     const qc = await pool.query('SELECT COUNT(*)::int as c FROM quizzes');
     if (!qc.rows[0] || qc.rows[0].c === 0) {
-      await pool.query('INSERT INTO quizzes (course_id,title) VALUES ($1,$2,$3)', [1,1,'Basics Check']);
-      await pool.query('INSERT INTO quiz_questions (quiz_id,prompt,options,correct_option) VALUES ($1,$2,$3,$4)', [1,'HTML stands for?', JSON.stringify(['Hyperlinks and Text Markup Language','Hyper Text Markup Language','Home Tool Markup Language']), 1]);
-      await pool.query('INSERT INTO quiz_questions (quiz_id,prompt,options,correct_option) VALUES ($1,$2,$3,$4)', [1,'CSS is used for?', JSON.stringify(['Styling','Database','Networking']), 0]);
-      await pool.query('INSERT INTO quizzes (course_id,title) VALUES ($1,$2,$3)', [2,2,'JavaScript Core']);
-      await pool.query('INSERT INTO quiz_questions (quiz_id,prompt,options,correct_option) VALUES ($1,$2,$3,$4)', [2,'let vs var: let is?', JSON.stringify(['Function-scoped','Block-scoped','Global only']), 1]);
+     const webCourse = await pool.query(
+  'SELECT id FROM courses WHERE title = $1',
+  ['Web Development Mastery']
+);
+const webCourseId = webCourse.rows[0].id;
+
+const jsCourse = await pool.query(
+  'SELECT id FROM courses WHERE title = $1',
+  ['JavaScript Superpowers']
+);
+const jsCourseId = jsCourse.rows[0].id;
+const quiz1 = await pool.query(
+  'INSERT INTO quizzes (course_id,title) VALUES ($1,$2) RETURNING id',
+  [webCourseId, 'Basics Check']
+);
+const quizId1 = quiz1.rows[0].id;
+
+const quiz2 = await pool.query(
+  'INSERT INTO quizzes (course_id,title) VALUES ($1,$2) RETURNING id',
+  [jsCourseId, 'JavaScript Core']
+);
+const quizId2 = quiz2.rows[0].id;
+await pool.query(
+  'INSERT INTO quiz_questions (quiz_id,prompt,options,correct_option) VALUES ($1,$2,$3,$4)',
+  [
+    quizId1,
+    'HTML stands for?',
+    JSON.stringify([
+      'Hyperlinks and Text Markup Language',
+      'Hyper Text Markup Language',
+      'Home Tool Markup Language'
+    ]),
+    1
+  ]
+);
+
+await pool.query(
+  'INSERT INTO quiz_questions (quiz_id,prompt,options,correct_option) VALUES ($1,$2,$3,$4)',
+  [
+    quizId1,
+    'CSS is used for?',
+    JSON.stringify(['Styling', 'Database', 'Networking']),
+    0
+  ]
+);
+
+await pool.query(
+  'INSERT INTO quiz_questions (quiz_id,prompt,options,correct_option) VALUES ($1,$2,$3,$4)',
+  [
+    quizId2,
+    'let vs var: let is?',
+    JSON.stringify(['Function-scoped', 'Block-scoped', 'Global only']),
+    1
+  ]
+);
+
     }
 
     const ac = await pool.query('SELECT COUNT(*)::int as c FROM assignments');
     if (!ac.rows[0] || ac.rows[0].c === 0) {
-      await pool.query('INSERT INTO assignments (course_id,title,description) VALUES ($1,$2,$3,$4)', [1,1,'Build a Landing Page','Create a simple responsive landing page with HTML and CSS.']);
-      await pool.query('INSERT INTO assignments (course_id,title,description) VALUES ($1,$2,$3,$4)', [2,2,'Write Async Functions','Implement two async functions using fetch and handle errors.']);
-    }
-  })();
+    await pool.query(
+  'INSERT INTO assignments (course_id,title,description) VALUES ($1,$2,$3)',
+  [
+    webCourseId,
+    'Build a Landing Page',
+    'Create a simple responsive landing page with HTML and CSS.'
+  ]
+);
+
+await pool.query(
+  'INSERT INTO assignments (course_id,title,description) VALUES ($1,$2,$3)',
+  [
+    jsCourseId,
+    'Write Async Functions',
+    'Implement two async functions using fetch and handle errors.'
+  ]
+);
 } else {
   db.serialize(() => {
     db.run('CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, email TEXT UNIQUE, passwordHash TEXT, role TEXT)');
