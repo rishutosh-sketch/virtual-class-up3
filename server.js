@@ -97,26 +97,26 @@ if (usePg) {
     const ccnt = await pool.query('SELECT COUNT(*)::int as c FROM courses');
     if (!ccnt.rows[0] || ccnt.rows[0].c === 0) {
       const seedCourses = [
-        [1, 'Web Development Mastery', 'John Smith', 'Web Dev', 'Beginner', '12h', 'Build modern responsive websites using HTML, CSS, and JS.', 'https://upload.wikimedia.org/wikipedia/commons/6/61/HTML5_logo_and_wordmark.svg'],
-        [2, 'JavaScript Superpowers', 'Sarah Johnson', 'Programming', 'Intermediate', '10h', 'Master ES6+, async patterns, and practical DOM workflows.', 'https://share.google/images/Q4dZtlgWHmiK8w6Of'],
-        [3, 'Python Domination', 'Mike Davis', 'Coding', 'Beginner', '14h', 'From basics to OOP and packages with hands-on labs.', 'https://upload.wikimedia.org/wikipedia/commons/f/f8/Python_logo_and_wordmark.svg'],
-        [4, 'Data Science Revolution', 'Emily Chen', 'Data Science', 'Advanced', '16h', 'Statistics, pandas, visualization, and ML foundations.', 'https://upload.wikimedia.org/wikipedia/commons/1/12/Chart_bar_black.svg'],
-        [5, 'UI/UX Design Legends', 'Alex Rivera', 'Design', 'Beginner', '8h', 'Human-centered design, wireframes, and prototyping best practices.', 'https://upload.wikimedia.org/wikipedia/commons/3/33/Figma-logo.svg'],
-        [6, 'MongoDB Database Beast', 'Robert Kumar', 'Database', 'Intermediate', '9h', 'Schemas, queries, indexes, and performance tuning.', 'https://upload.wikimedia.org/wikipedia/commons/9/93/MongoDB_Logo.svg']
+        ['Web Development Mastery', 'John Smith', 'Web Dev', 'Beginner', '12h', 'Build modern responsive websites using HTML, CSS, and JS.', 'https://upload.wikimedia.org/wikipedia/commons/6/61/HTML5_logo_and_wordmark.svg'],
+        ['JavaScript Superpowers', 'Sarah Johnson', 'Programming', 'Intermediate', '10h', 'Master ES6+, async patterns, and practical DOM workflows.', 'https://share.google/images/Q4dZtlgWHmiK8w6Of'],
+        ['Python Domination', 'Mike Davis', 'Coding', 'Beginner', '14h', 'From basics to OOP and packages with hands-on labs.', 'https://upload.wikimedia.org/wikipedia/commons/f/f8/Python_logo_and_wordmark.svg'],
+        ['Data Science Revolution', 'Emily Chen', 'Data Science', 'Advanced', '16h', 'Statistics, pandas, visualization, and ML foundations.', 'https://upload.wikimedia.org/wikipedia/commons/1/12/Chart_bar_black.svg'],
+        ['UI/UX Design Legends', 'Alex Rivera', 'Design', 'Beginner', '8h', 'Human-centered design, wireframes, and prototyping best practices.', 'https://upload.wikimedia.org/wikipedia/commons/3/33/Figma-logo.svg'],
+        ['MongoDB Database Beast', 'Robert Kumar', 'Database', 'Intermediate', '9h', 'Schemas, queries, indexes, and performance tuning.', 'https://upload.wikimedia.org/wikipedia/commons/9/93/MongoDB_Logo.svg']
       ];
-      for (const c of seedCourses) { await pool.query('INSERT INTO courses (id,title,instructor,category,level,duration,description,image_url) VALUES ($1,$2,$3,$4,$5,$6,$7,$8)', c); }
+      for (const c of seedCourses) { await pool.query('INSERT INTO courses (title,instructor,category,level,duration,description,image_url) VALUES ($1,$2,$3,$4,$5,$6,$7)', c); }
     }
 
     const moreCourses = [
-      { id: 7, title: 'React Essentials', instructor: 'Nina Patel', category: 'Web Dev', level: 'Intermediate', duration: '11h', description: 'Components, hooks, and state management fundamentals.', image_url: 'https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg' },
-      { id: 8, title: 'TypeScript for Pros', instructor: 'David Lee', category: 'Programming', level: 'Intermediate', duration: '9h', description: 'Types, generics, interfaces, and integrating with JS projects.', image_url: 'https://upload.wikimedia.org/wikipedia/commons/4/4c/Typescript_logo_2020.svg' },
-      { id: 9, title: 'Node.js API Design', instructor: 'Priya Sharma', category: 'Backend', level: 'Intermediate', duration: '12h', description: 'REST patterns, auth, validation, and performance.', image_url: 'https://upload.wikimedia.org/wikipedia/commons/d/d9/Node.js_logo.svg' },
-      { id: 10, title: 'SQL & Data Modeling', instructor: 'Luis Garcia', category: 'Database', level: 'Beginner', duration: '10h', description: 'Relational fundamentals, SQL queries, and schema design.', image_url: '' },
-      { id: 12, title: 'DevOps Basics', instructor: 'Tom Nguyen', category: 'DevOps', level: 'Beginner', duration: '7h', description: 'CI/CD, pipelines, environments, and observability.', image_url: 'https://upload.wikimedia.org/wikipedia/commons/3/3f/Git_icon.svg' }
+      { title: 'React Essentials', instructor: 'Nina Patel', category: 'Web Dev', level: 'Intermediate', duration: '11h', description: 'Components, hooks, and state management fundamentals.', image_url: 'https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg' },
+      { title: 'TypeScript for Pros', instructor: 'David Lee', category: 'Programming', level: 'Intermediate', duration: '9h', description: 'Types, generics, interfaces, and integrating with JS projects.', image_url: 'https://upload.wikimedia.org/wikipedia/commons/4/4c/Typescript_logo_2020.svg' },
+      { title: 'Node.js API Design', instructor: 'Priya Sharma', category: 'Backend', level: 'Intermediate', duration: '12h', description: 'REST patterns, auth, validation, and performance.', image_url: 'https://upload.wikimedia.org/wikipedia/commons/d/d9/Node.js_logo.svg' },
+      { title: 'SQL & Data Modeling', instructor: 'Luis Garcia', category: 'Database', level: 'Beginner', duration: '10h', description: 'Relational fundamentals, SQL queries, and schema design.', image_url: '' },
+      { title: 'DevOps Basics', instructor: 'Tom Nguyen', category: 'DevOps', level: 'Beginner', duration: '7h', description: 'CI/CD, pipelines, environments, and observability.', image_url: 'https://upload.wikimedia.org/wikipedia/commons/3/3f/Git_icon.svg' }
     ];
     for (const c of moreCourses) {
       const r2 = await pool.query('SELECT id FROM courses WHERE title = $1', [c.title]);
-      let cid = r2.rows[0] && r2.rows[0].id ? r2.rows[0].id : c.id;
+      let cid = r2.rows[0]?.id;
       if (!r2.rows[0]) {
         const ins = await pool.query('INSERT INTO courses (title,instructor,category,level,duration,description,image_url) VALUES ($1,$2,$3,$4,$5,$6,$7) RETURNING id', [c.title, c.instructor, c.category, c.level, c.duration, c.description, c.image_url || '']);
         cid = ins.rows[0].id;
