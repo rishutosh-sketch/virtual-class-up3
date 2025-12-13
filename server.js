@@ -197,17 +197,17 @@ if (usePg) {
 
     const qc = await pool.query('SELECT COUNT(*)::int as c FROM quizzes');
     if (!qc.rows[0] || qc.rows[0].c === 0) {
-      await pool.query('INSERT INTO quizzes (id,course_id,title) VALUES ($1,$2,$3)', [1,1,'Basics Check']);
+      await pool.query('INSERT INTO quizzes (course_id,title) VALUES ($1,$2,$3)', [1,1,'Basics Check']);
       await pool.query('INSERT INTO quiz_questions (quiz_id,prompt,options,correct_option) VALUES ($1,$2,$3,$4)', [1,'HTML stands for?', JSON.stringify(['Hyperlinks and Text Markup Language','Hyper Text Markup Language','Home Tool Markup Language']), 1]);
       await pool.query('INSERT INTO quiz_questions (quiz_id,prompt,options,correct_option) VALUES ($1,$2,$3,$4)', [1,'CSS is used for?', JSON.stringify(['Styling','Database','Networking']), 0]);
-      await pool.query('INSERT INTO quizzes (id,course_id,title) VALUES ($1,$2,$3)', [2,2,'JavaScript Core']);
+      await pool.query('INSERT INTO quizzes (course_id,title) VALUES ($1,$2,$3)', [2,2,'JavaScript Core']);
       await pool.query('INSERT INTO quiz_questions (quiz_id,prompt,options,correct_option) VALUES ($1,$2,$3,$4)', [2,'let vs var: let is?', JSON.stringify(['Function-scoped','Block-scoped','Global only']), 1]);
     }
 
     const ac = await pool.query('SELECT COUNT(*)::int as c FROM assignments');
     if (!ac.rows[0] || ac.rows[0].c === 0) {
-      await pool.query('INSERT INTO assignments (id,course_id,title,description) VALUES ($1,$2,$3,$4)', [1,1,'Build a Landing Page','Create a simple responsive landing page with HTML and CSS.']);
-      await pool.query('INSERT INTO assignments (id,course_id,title,description) VALUES ($1,$2,$3,$4)', [2,2,'Write Async Functions','Implement two async functions using fetch and handle errors.']);
+      await pool.query('INSERT INTO assignments (course_id,title,description) VALUES ($1,$2,$3,$4)', [1,1,'Build a Landing Page','Create a simple responsive landing page with HTML and CSS.']);
+      await pool.query('INSERT INTO assignments (course_id,title,description) VALUES ($1,$2,$3,$4)', [2,2,'Write Async Functions','Implement two async functions using fetch and handle errors.']);
     }
   })();
 } else {
